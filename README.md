@@ -2,44 +2,43 @@
 
 Models five years of the Stack Overflow Developer Survey (2021-2025) into a US
 compensation mart. This code reconciles the survey schemas, which change every year,
-and adjusts pay for inflation (final mart is in 2025 dollars).
+and adjusts pay for inflation (final mart has a column in 2025 dollars).
 
 ## The problem
 
 The five annual files don't form a clean panel:
-
-- Columns are added, dropped, and renamed; the column count grows year over year.
-- USD inflates over time, causing salary comparison between years is impacted
+- Columns are added, dropped, and renamed year over year.
+- Comparing nominal salaries across years does not account for inflation.
 
 ## Architecture
 
 ```
-raw CSVs   ->  staging  ->  intermediate  --+
-                                            +-->  mart
-CPI-U seed ---------------------------------+
+raw CSVs (gitignored)  ->  staging  ->  mart
+                                          ^
+CPI-U seed (committed) ->  intermediate --+
 ```
 
-- **Sources**: one raw CSV per year, gitignored in `data/raw/` (too large to
-  commit). Download: https://survey.stackoverflow.co/
-- **Staging**: one model per year, projected to a canonical schema, typed, and
-  null-filled for columns absent that year so all five union cleanly. Schema drift
-  is dealt with here.
-- **Intermediate**: unions the years, filters to US.
-- **Seeds**: CPI-U annual averages (FRED), committed as a static CSV and joined in the mart. 
-October 2025 data is missing due to government shutdown, and will not be backfilled, 
-so used only the 11 available months to compute the CPI average in 2025. Direct download 
-available here, but not necissary as the csv is in the repo
-- **Mart**: US compensation, CPI-deflated to 2025 dollars.
-
+- **Sources**: one raw CSV per year, gitignored in `data/raw/` (files are 50-200 MB).
+  Download from https://survey.stackoverflow.co/
+- **Staging**: one model per year. Projects the raw columns to a shared 
+  schema, casts types, and null-fills columns absent in that year so all five union
+  cleanly. Schema drift is handled here.
+- **Intermediate**: `int_stackoverflow__cpi_u` -- computes annual CPI-U averages from
+  the monthly FRED seed data.
+- **Seeds**: Monthly CPI-U observations from FRED, committed as a static CSV. 
+  Note: October 2025 is missing due to a government shutdown and will not
+  be back-filled. The 2025 annual average uses the 11 available months.
+- **Mart**: `stackoverflow__survey` -- unions all five years, filters to US respondents,
+  and joins CPI to produce `adjusted_comp_yearly_2025` (constant 2025 USD). The 2025
+  cohort is passed through un-adjusted since it is already in the base year.
+  
 ## Key decisions
 
-- **Comp base is `ConvertedCompYearly`** (Stack Overflow's pre-converted annual USD),
-  not a rebuild from raw `CompTotal`, which would reopen the 2021/2022 annualization
-  seam for no accuracy gain.
-- **Inflation**: CPI-U annual averages (FRED), deflated to constant dollars.
-- **US-only scope**: US salaries are USD-native, so figures are exact with no
-  currency or purchasing-power confound. A global cut would inherit the per-year
-  exchange-rate drift baked into the source, so it's deliberately out of scope.
+- **Inflation index**: CPI-U annual averages (FRED)
+- **US-only scope**: US respondents report in USD natively, eliminating currency 
+  and purchasing-power confounds that would complicate a global cut. However, the 
+  underlying data is still stored in the marts so a further project could build 
+  on this one if desired
 
 ## Stack
 
@@ -50,13 +49,15 @@ dbt-duckdb, DuckDB, Python 3.12, uv
 ```
 uv sync
 cd analytics
-dbt deps
 dbt build
 ```
 
 Warehouse builds to `analytics/dev.duckdb`.
 
+## Notes
+The 2025 survey was smaller, and that decision was made by Stackoverflow. Lower 
+totals for 2025 are correct, not a filtering/ data cleanliness issue
+
 ## Status
 
-- Built and tested: Staging, CPI seed
-- In progress:intermediate, US mart
+Project is fully complete

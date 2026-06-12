@@ -1,0 +1,58 @@
+version: 2
+
+models:
+  - name: stackoverflow__survey
+    description: >
+      Combined Stack Overflow Developer Survey responses for US-based respondents, 2021-2025.
+      Each row is one survey response. Unique ID is a concatenation of survey year and
+      response ID to ensure uniqueness across years. Compensation figures are adjusted to 
+      constant 2025 dollars using CPI-U annual averages in the adjusted_comp_yearly_2025 field.
+    columns:
+      - name: unique_id
+        description: "Survey year concatenated with response_id. Unique across all years/ the entire table."
+        data_tests:
+          - not_null
+          - unique
+      - name: survey_year
+        description: "Calendar year the survey was administered."
+        data_tests:
+          - not_null
+      - name: main_branch
+        description: "Respondent's self-described relationship to software development."
+      - name: employment
+        description: "Employment status (e.g. full-time, part-time, freelance)."
+      - name: country
+        description: "Country of residence. Filtered to United States of America only in this model."
+        data_tests:
+          - not_null
+      - name: currency
+        description: "Currency the respondent reported compensation in."
+      - name: comp_total
+        description: "Raw total compensation as reported by the respondent, in their local currency."
+      - name: comp_freq
+        description: "Frequency of reported compensation (e.g. yearly, monthly, weekly)."
+      - name: converted_comp_yearly
+        description: "Stack Overflow's pre-converted annualized compensation in USD. Null where not reported."
+      - name: adjusted_comp_yearly_2025
+        description: >
+          converted_comp_yearly adjusted to constant 2025 USD using CPI-U annual averages.
+          For 2025 respondents, equals converted_comp_yearly directly (already in base year).
+          Null where converted_comp_yearly is null.
+      - name: age
+        description: "Respondent age bracket."
+      - name: ed_level
+        description: "Highest level of education completed."
+      - name: dev_type
+        description: "Developer type(s) the respondent identifies with. May contain semicolon-delimited multiple values."
+      - name: org_size
+        description: "Size of the respondent's organization."
+      - name: years_code
+        description: "Total years the respondent has been coding."
+      - name: years_code_pro
+        description: "Years the respondent has coded professionally."
+      - name: work_exp
+        description: "Years of professional work experience. Null for 2021 and 2022 (field not collected)."
+      - name: remote_work
+        description: "Remote work arrangement. Null for 2021 and 2022 (field not collected)."
+      - name: industry
+        description: "Industry the respondent works in. Null for 2021 and 2022 (field not collected)."
