@@ -1,0 +1,20 @@
+version: 2
+
+models:
+  - name: int_stackoverflow__cpi_u
+    description: >
+      Annual averages of the FRED CPI-U (Consumer Price Index for All Urban Consumers),
+      aggregated yearly. Used downstream in stackoverflow__survey mart to adjust survey 
+      compensation figures to constant 2025 dollars.
+    columns:
+      - name: cpi_year
+        description: "Calendar year extracted from the monthly observation date."
+        data_tests:
+          - not_null
+          - unique
+      - name: cpi_yearly_avg
+        description: "Simple average of the 12 monthly CPI-U index values for the year. 
+          2025 is only 11 months as the government shutdown stopped FRED from releasing 
+          the October reading."
+        data_tests:
+          - not_null
