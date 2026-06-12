@@ -1,0 +1,30 @@
+version: 2
+
+sources:
+  - name: stackoverflow
+    tables:
+      - name: survey_2025
+        description: "Source csv, 2025 Stack Overflow survey results."
+        config:
+          meta:
+            external_location: "read_csv('../data/raw/2025_survey_results.csv', sample_size=-1)"
+      - name: survey_2024
+        description: "Source csv, 2024 Stack Overflow survey results."
+        config:
+          meta:
+            external_location: "read_csv('../data/raw/2024_survey_results.csv', sample_size=-1)"
+      - name: survey_2023
+        description: "Source csv, 2023 Stack Overflow survey results."
+        config:
+          meta:
+            external_location: "read_csv('../data/raw/2023_survey_results.csv', sample_size=-1)"
+      - name: survey_2022
+        description: "Source csv, 2022 Stack Overflow survey results."
+        config:
+          meta:
+            external_location: "read_csv('../data/raw/2022_survey_results.csv', sample_size=-1)"
+      - name: survey_2021
+        description: "Source csv, 2021 Stack Overflow survey results."
+        config:
+          meta:
+            external_location: "read_csv('../data/raw/2021_survey_results.csv', sample_size=-1)"

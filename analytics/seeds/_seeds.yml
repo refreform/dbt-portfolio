@@ -1,0 +1,17 @@
+version: 2
+
+seeds:
+  - name: cpi_u
+    description: "FRED consumer price index for urban consumers, recorded monthly. Used for time normalization of compensation."
+    config:
+      column_types:
+        observation_date: date
+        CPIAUCNS: double
+    columns:
+      - name: observation_date
+        description: "First-of-month observation date for the CPI reading."
+        data_tests:
+          - not_null
+          - unique
+      - name: CPIAUCNS
+        description: "CPI-U index value, not seasonally adjusted. Null where the monthly release is unavailable (e.g. 2025-10)."
