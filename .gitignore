@@ -18,3 +18,4 @@ logs/
 
 # Local env
 .env
+data/raw/*.csv

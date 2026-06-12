@@ -1,0 +1,57 @@
+version: 2
+
+models:
+  - name: stg_stackoverflow__survey_2021
+    description: "2021 survey responses, renamed and selected only relevant fields. adds null fields to make compatible with other years."
+    columns:
+      - name: response_id
+        description: "Survey response key, unique within year."
+        data_tests:
+          - not_null
+          - unique
+      - name: converted_comp_yearly
+        description: "Stack Overflow's pre-converted annual USD compensation. Null where not reported."
+
+  - name: stg_stackoverflow__survey_2022
+    description: "2022 survey responses, renamed and selected only relevant fields. adds null fields to make compatible with other years."
+    columns:
+      - name: response_id
+        description: "Survey response key, unique within year."
+        data_tests:
+          - not_null
+          - unique
+      - name: converted_comp_yearly
+        description: "Stack Overflow's pre-converted annual USD compensation. Null where not reported."
+        
+  - name: stg_stackoverflow__survey_2023
+    description: "2023 survey responses, renamed and selected only relevant fields. adds null fields to make compatible with other years."
+    columns:
+      - name: response_id
+        description: "Survey response key, unique within year."
+        data_tests:
+          - not_null
+          - unique
+      - name: converted_comp_yearly
+        description: "Stack Overflow's pre-converted annual USD compensation. Null where not reported."
+
+  - name: stg_stackoverflow__survey_2024
+    description: "2024 survey responses, renamed and selected only relevant fields. adds null fields to make compatible with other years."
+    columns:
+      - name: response_id
+        description: "Survey response key, unique within year."
+        data_tests:
+          - not_null
+          - unique
+      - name: converted_comp_yearly
+        description: "Stack Overflow's pre-converted annual USD compensation. Null where not reported."
+        
+  - name: stg_stackoverflow__survey_2025
+    description: "2025 survey responses, renamed and selected only relevant fields. Adds null fields to make compatible with other years."
+    columns:
+      - name: response_id
+        description: "Survey response key, unique within year."
+        data_tests:
+          - not_null
+          - unique
+      - name: converted_comp_yearly
+        description: "Stack Overflow's pre-converted annual USD compensation. Null where not reported."
